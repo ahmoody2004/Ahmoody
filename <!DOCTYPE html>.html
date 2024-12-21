@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>صفحة الآلات</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            direction: rtl;
+            text-align: center;
+            margin-top: 50px;
+            background-color: #f4f4f9;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            margin: 10px;
+            width: 200px;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .content {
+            margin-top: 30px;
+            font-size: 22px;
+            font-weight: bold;
+            display: none;
+        }
+        .content.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+            width: 25%; /* العرض سيكون 20% لجميع المدخلات */
+            margin: 0 10px;
+        }
+        label {
+            font-size: 16px;
+            margin-bottom: 5px;
+            display: inline-block;
+            text-align: right;
+        }
+        input[type="text"], input[type="number"], input[type="date"], textarea, select {
+            padding: 10px;
+            width: 100%;
+            margin-top: 5px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+        textarea {
+            resize: vertical;
+        }
+        .form-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #333;
+            text-align: right;
+        }
+        .form-container .form-group {
+            width: 25%; /* ضبط العرض ليكون 23% بدلاً من 20% */
+        }
+        .form-container button {
+            width: 200px; /* حجم الأزرار ثابت */
+        }
+        h2{
+            color :rgba(13, 0, 255, 0.822);
+        }
+    </style>
+</head>
+<body>
+
+    <h1>اختر الآلة</h1>
+
+    <div class="container">
+        <button onclick="showContent('laser')">مكينة الليزر</button>
+        <button onclick="showContent('punching')">مكينة الطعاجة</button>
+        <button onclick="showContent('lathe')">مكينة المخرطة</button>
+    </div>
+
+    <!-- محتوى مكينة الليزر -->
+    <div id="laser" class="content">
+        <h2>معلومات عن مكينة الليزر</h2>
+        <form id="laser-form">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="laser-invoice-date">تاريخ الفاتورة:</label>
+                    <input type="date" id="laser-invoice-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="laser-invoice-number">رقم الفاتورة:</label>
+                    <input type="number" id="laser-invoice-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="laser-total-amount">المبلغ شامل الضريبة:</label>
+                    <input type="number" id="laser-total-amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="laser-tax-amount">الضريبة (15%):</label>
+                    <input type="number" id="laser-tax-amount" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="laser-notes">ملاحظات:</label>
+                    <textarea id="laser-notes" rows="4" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="laser-type">نوع المبلغ:</label>
+                    <select id="laser-type">
+                        <option value="">  تحديد المبلغ</option>
+                        <option value="منصرف">منصرف</option>
+                        <option value="دخل">دخل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-container">
+                <button type="button" onclick="saveData('laser')">حفظ</button>
+                <button type="button" onclick="deleteData('laser')">حذف</button>
+                <button type="button" onclick="getInvoice('laser')">استعلام</button>
+                <button type="button" onclick="clearFields('laser')">تفريغ الحقول</button>
+            </div>
+        </form>
+        <div id="laser-result" class="result"></div>
+    </div>
+
+    <!-- محتوى مكينة الطعاجة -->
+    <div id="punching" class="content">
+        <h2>معلومات عن مكينة الطعاجة</h2>
+        <form id="punching-form">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="punching-invoice-date">تاريخ الفاتورة:</label>
+                    <input type="date" id="punching-invoice-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="punching-invoice-number">رقم الفاتورة:</label>
+                    <input type="number" id="punching-invoice-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="punching-total-amount">المبلغ شامل الضريبة:</label>
+                    <input type="number" id="punching-total-amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="punching-tax-amount">الضريبة (15%):</label>
+                    <input type="number" id="punching-tax-amount" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="punching-notes">ملاحظات:</label>
+                    <textarea id="punching-notes" rows="4" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="punching-type">تحديد المبلغ:</label>
+                    <select id="punching-type">
+                        <option value="">تحديد المبلغ </option>
+                        <option value="منصرف">منصرف</option>
+                        <option value="دخل">دخل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-container">
+                <button type="button" onclick="saveData('punching')">حفظ</button>
+                <button type="button" onclick="deleteData('punching')">حذف</button>
+                <button type="button" onclick="getInvoice('punching')">استعلام</button>
+                <button type="button" onclick="clearFields('punching')">تفريغ الحقول</button>
+            </div>
+        </form>
+        <div id="punching-result" class="result"></div>
+    </div>
+
+    <!-- محتوى مكينة المخرطة -->
+    <div id="lathe" class="content">
+        <h2>معلومات عن مكينة المخرطة</h2>
+        <form id="lathe-form">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="lathe-invoice-date">تاريخ الفاتورة:</label>
+                    <input type="date" id="lathe-invoice-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="lathe-invoice-number">رقم الفاتورة:</label>
+                    <input type="number" id="lathe-invoice-number" required>
+                </div>
+                <div class="form-group">
+                    <label for="lathe-total-amount">المبلغ شامل الضريبة:</label>
+                    <input type="number" id="lathe-total-amount" required>
+                </div>
+                <div class="form-group">
+                    <label for="lathe-tax-amount">الضريبة (15%):</label>
+                    <input type="number" id="lathe-tax-amount" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="lathe-notes">ملاحظات:</label>
+                    <textarea id="lathe-notes" rows="4" placeholder="أدخل ملاحظاتك هنا..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="lathe-type">نوع المبلغ:</label>
+                    <select id="lathe-type">
+                        <option value=""> تحديد المبلغ </option>
+                        <option value="منصرف">منصرف</option>
+                        <option value="دخل">دخل</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-container">
+                <button type="button" onclick="saveData('lathe')">حفظ</button>
+                <button type="button" onclick="deleteData('lathe')">حذف</button>
+                <button type="button" onclick="getInvoice('lathe')">استعلام</button>
+                <button type="button" onclick="clearFields('lathe')">تفريغ الحقول</button>
+            </div>
+        </form>
+        <div id="lathe-result" class="result"></div>
+    </div>
+
+    <script>
+        // عرض المحتوى عند النقر على الزر
+        function showContent(machine) {
+            const contents = document.querySelectorAll('.content');
+            contents.forEach(content => content.classList.remove('active'));
+            const selectedMachine = document.getElementById(machine);
+            selectedMachine.classList.add('active');
+        }
+
+        // حساب الضريبة
+        function calculateTax(amount) {
+            return amount * 0.15;
+        }
+
+        // حفظ البيانات
+        function saveData(machine) {
+            const date = document.getElementById(`${machine}-invoice-date`).value;
+            const number = document.getElementById(`${machine}-invoice-number`).value;
+            const totalAmount = parseFloat(document.getElementById(`${machine}-total-amount`).value);
+            const taxAmount = calculateTax(totalAmount);
+            const notes = document.getElementById(`${machine}-notes`).value;
+            const type = document.getElementById(`${machine}-type`).value;
+
+            if (isNaN(totalAmount) || !date || !number || !notes) {
+                alert("يرجى ملء جميع الحقول بشكل صحيح");
+                return;
+            }
+
+            // التحقق من اختيار نوع المبلغ
+            if (type === "") {
+                alert("يرجى اختيار نوع المبلغ (دخل أو مصروف)");
+                return;
+            }
+
+            // التحقق من عدم تكرار رقم الفاتورة
+            const existingInvoice = localStorage.getItem(`${machine}-invoice-${number}`);
+            if (existingInvoice) {
+                alert("هذه الفاتورة موجودة بالفعل");
+                return;
+            }
+
+            // حفظ البيانات في localStorage
+            const invoiceData = {
+                date: date,
+                number: number,
+                totalAmount: totalAmount,
+                taxAmount: taxAmount,
+                notes: notes,
+                type: type
+            };
+            localStorage.setItem(`${machine}-invoice-${number}`, JSON.stringify(invoiceData));
+
+            // تحديث واجهة المستخدم
+            document.getElementById(`${machine}-tax-amount`).value = taxAmount;
+
+            // تفريغ جميع الحقول بعد الحفظ
+            document.getElementById(`${machine}-form`).reset();
+
+            alert("تم حفظ البيانات بنجاح!");
+        }
+
+        // حذف البيانات
+        function deleteData(machine) {
+            const number = document.getElementById(`${machine}-invoice-number`).value;
+            if (number) {
+                localStorage.removeItem(`${machine}-invoice-${number}`);
+                alert("تم حذف البيانات بنجاح!");
+                document.getElementById(`${machine}-form`).reset();
+            } else {
+                alert("يرجى إدخال رقم الفاتورة");
+            }
+        }
+
+        // استعلام الفاتورة
+        function getInvoice(machine) {
+            const number = document.getElementById(`${machine}-invoice-number`).value;
+            const invoiceData = JSON.parse(localStorage.getItem(`${machine}-invoice-${number}`));
+
+            if (invoiceData) {
+                document.getElementById(`${machine}-invoice-date`).value = invoiceData.date;
+                document.getElementById(`${machine}-invoice-number`).value = invoiceData.number;
+                document.getElementById(`${machine}-total-amount`).value = invoiceData.totalAmount;
+                document.getElementById(`${machine}-tax-amount`).value = invoiceData.taxAmount;
+                document.getElementById(`${machine}-notes`).value = invoiceData.notes;
+
+                document.getElementById(`${machine}-result`).innerHTML = `
+                    <p>تم العثور على الفاتورة بنجاح! نوع الفاتورة: ${invoiceData.type}</p>
+                `;
+            } else {
+                document.getElementById(`${machine}-result`).innerHTML = "<p>لم يتم العثور على الفاتورة</p>";
+            }
+        }
+
+        // تفريغ الحقول
+        function clearFields(machine) {
+            document.getElementById(`${machine}-form`).reset();
+            document.getElementById(`${machine}-result`).innerHTML = "";
+        }
+    </script>
+
+</body>
+</html>
